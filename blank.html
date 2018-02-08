@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Blank Page for Rich Text Editing</title>
+</head>
+<body>
+	<div id='container'></div>
+	<button id='createString'>Click Me!</button>
+	<script>
+		window.onload=function(){
+			var createString=document.getElementById('createString');
+			createString.addEventListener('click',function(){
+				var container=document.getElementById('container');
+				container.innerHTML='<strong>chenji</strong>';
+			},false);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+<head>
+	<meta charset="UTF-8">
+	<title>高级技巧</title>
+</head>
+<body id="body">
+<!-- draggable='true'-->
+	<div id='dragContainer' style='background-color:red;width:200px;height:200px;position:absolute;' class='draggable'></div>
+</body>
+<script>
+// 高级函数
+	// 1.安全类型检测 typeof不能检测RegExp instanceof 有局限性，如果不是window中的了，如果是另外一个框架中的了？
+	// 所以建议使用Object.prototype.toString.call()..前提是Object.prototype.toString没有被串改过
+	// console.log(Object.prototype.toString.call(/^a/));
+
+	// 2.作用域安全的构造函数
+	// 不安全作用域的函数
+	function Person(name,age){
+		this.name=name;
+		this.age=age;
+	}
+
+	// 这个时候如果忘掉了加new的话，那么相当于把name和age都给了window，因为window是全局变量
+	var p=Person('chenji',27);
+	console.log(window.name);
+	// console.log(p.name);
+
+	// 安全作用域的函数
+	function Person(name,age){
+		// 如果没有用new，这里的this就是window，于是就不会进入
+		if(this instanceof Person){
+			this.name=name;
+			this.age=age;
+		}else{
+			return new Person(name,age);
+		}
+	}
+
+	// 但是安全域的构造函数在继承的时候会有一点小问题，需要进行一下修改即可
+	function Polygon(sides){
+		if(this instanceof Polygon){
+			this.sides=sides;
+			this.getArea=function(){
+				return 0;
+			};
+		}else{
+			return new Polygon(sides);
+		}
+	}
+
+	function Rectange(width,height){
+		Polygon.call(this,2);
+		this.width=width;
+		this.height=height;
+	}
+	// 如果不加下面这段的话是没有值的，因为this不是Polygon，然后就进入到了else，就新建了一个对象了
+	Rectange.prototype=new Polygon();
+	
+	var r=new Rectange(100,100);
+	console.log(r.sides);
+
+	// 3.惰性载入函数
+	// 如果有些函数里面有多个if语句，但是这个if语句只需要判断一次就可以了，不需要后续也来判断的话，可以使用惰性函数
+	// 实现有两种方法，一个就是if语句重新定义函数，另外就是利用闭包，然后return function
+	function fnInertia(){
+		if(typeof XMLHttpRequest !='undefined'){
+			fnInertia=function(){
+				console.log('可以使用XMLHttpRequest,我下次就不需要判断了')
+			}
+		}else{
+			fnInertia=function(){
+				console.log('不可以使用XMLHttpRequest,我下次就不需要判断了')
+			}
+		}
+	}
+
+	var fnInertia=(function(){
+		if(typeof XMLHttpRequest !='undefined'){
+			return function(){
+				console.log('可以使用XMLHttpRequest,我下次就不需要判断了')
+			}
+		}else{
+			return function(){
+				console.log('不可以使用XMLHttpRequest,我下次就不需要判断了')
+			}
+		}
+	})();
+
+	// 4.函数绑定
+	var handler={message:'click handle',
+				 handleClick:function(e){
+				 	console.log(this.message+'---'+e.type);
+				 }
+		}
+
+	var btn=document.createElement('button');
+	btn.innerHTML='ClickMe';
+	document.body.appendChild(btn);
+	// 这里的this.message是undefined,是因为this现在就是btn，下面语句类似于handler.handleClick.call(btn);
+	btn.onclick=handler.handleClick;
+	// 进行修改，通过闭包来形成一个输出环境
+	btn.onclick=function(e){
+		handler.handleClick(e);
+	}
+
+	// 但是使用闭包来不容易测试和难于理解，而且如果多了好像也不是太好，我们使用bind来试一下（绑定环境容易理解）
+	// 可以用自己创建的bind，或则使用ECMA5自带的(但是会带来额外的开销，所以需要在特定的情况下使用)
+	// bind功能讲解的很详细https://segmentfault.com/a/1190000002662251
+	function bind(fn,context){
+		return function(){
+			fn.apply(context,arguments);
+		}
+	}
+
+	btn.onclick=bind(handler.handleClick,handler);
+	// 使用默认的话就是这样
+	btn.onclick=handler.handleClick.bind(handler);
+	/*this.message='this Click';
+	btn.message='btn Click';
+	btn.onclick=handler.handleClick;*/
+	/*function testFn(name,age){
+		console.log(arguments);
+	}
+	testFn('chenji',34,'man');*/
+
+	// 5.函数柯里化
+	// 相对于函数绑定就是多了一些参数而已
+	// 进行降阶，既然降阶了那么当然就可以每次只传一个参数了，既然只传一个参数那么就可以在性能在有所帮助了，比如你参数需要计算的话，那么一个一个传比较好
+	function bindKLH(fn,context){
+		// !!关于slice是array.prototype的，而且调用的时候肯定要用call啊，脑子好秀
+		// slice就是为了复制一份一样的
+		// 下面的这个arguments就是fn、context还有最后一个参数，所以用2来获取
+		var args=Array.prototype.slice.call(arguments,2)
+		return function(){
+			var innerArgs=Array.prototype.slice.call(arguments);
+			var finalArgs=args.concat(innerArgs);
+			fn.apply(context,finalArgs);
+		};
+	}
+
+	handler={message:'click handle',
+				 handleClick:function(name,e){//参数的顺序也不要弄混了，自己定义的放在前面（name）
+				 	console.log(this.message+'---'+name+'-----'+e.type);
+				 }
+		}
+
+	btn.onclick=handler.handleClick.bind(handler,'KLHName');	
+	btn.onclick=bindKLH(handler.handleClick,handler,'KLHNameDefi');
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+//防篡改对象，通过修改属性的特性来限制属性
+	// 1.不可扩展对象
+	var person={name:'chenji'};
+	person.sex='man';
+	// preventExtensions是Object的属性
+	Object.preventExtensions(person);
+	person.age=16;
+
+	console.log(person.sex,person.age,Object.isExtensible());//man undefined
+	delete person.sex;//不可扩展对象可以进行删除
+	console.log(person.sex,person.age,Object.isExtensible());//man undefined
+
+	// 2.密封的对象（不可以对分别的对象属性进行删除） 封闭：一定不能扩展
+	Object.seal(person);
+	delete person.name; //删除无效
+	console.log(person.name,Object.isExtensible());
+	person.name='minxi';
+	console.log(person.name,Object.isSealed());
+
+	// 3.冻结的对象（更加严格，在前面两个的基础上，不能修改属性了）
+	Object.freeze(person);
+	// 下面是不生效的
+	person.name='nameNew';
+	console.log(person.name,Object.isFrozen());
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+//高级定时器
+//setInterval setTimeout，可以使用setTimeout来模拟setInterval，可以避免setInterval的一些缺陷
+//缺陷产生的原因是：在间隔后执行的意思是需要在javascript进程空闲的情况下，如果不是空闲的情况下即使你到了指定时间还是不会执行
+//1.定时器可以用来进行节流（通常是在进行resize的时候，这样就不需要时刻进行resize里面的操作了）
+//2.定时器还可以进行Yield Process，这个意思是：当浏览器在运行重复脚本的时候是有一个事件限制的，不会一直执行，如果这个执行不是需要同步的，就可以使用定时器来进行分割执行
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+//自定义事件
+function EventTarget(){
+	this.handlers=[];
+}
+
+EventTarget.prototype={
+	addHandler:function(type,handler){
+		if(typeof this.handlers[type]=='undefined'){
+			this.handlers[type]=[];
+		}
+
+		this.handlers[type].push(handler);
+	},
+	fire:function(event){
+		if(!event.target){
+			// 这个是用来扩展的，比如留着继承用
+			event.target=this;
+		}
+		if(this.handlers[event.type] instanceof Array){
+			for(var i=0,len=this.handlers[event.type].length;i<len;i++){
+				this.handlers[event.type][i](event);
+			}
+		}
+	},
+	removeHandler:function(type,handler){
+		if(this.handlers[type] instanceof Array){
+			for(var i=0,len=this.handlers[type].length;i<len;i++){
+				if(handler==this.handlers[type][i]){
+					break;
+				}
+			}
+			this.handlers[type].splice(i,1);
+		}
+	}
+};
+
+function showMessage(event){
+	console.log("this message:"+event.message);
+}
+
+var eventTarget=new EventTarget();
+eventTarget.addHandler('message',showMessage);
+eventTarget.fire({type:'message',message:'你启动了我，很棒！'});
+eventTarget.removeHandler('message',showMessage);
+eventTarget.fire({type:'message',message:'你启动了我，很棒！'});
+
+// 进行继承扩展
+function Person(name){
+	// 这里需要使用类来进行call
+	EventTarget.call(this);
+	this.name=name;
+}
+inheritProperty(Person,EventTarget);
+// 寄生组合继承
+function inheritProperty(subType,superType){
+	subType.prototype=superType.prototype;
+	subType.constructor=subType;
+}
+Person.prototype.say=function(message){
+	this.fire({type:'message',message:message});
+}
+function handleMessage(event){
+	console.log(event.target.name+' says:'+event.message);
+}
+var person=new Person('chenji');
+person.addHandler('message',handleMessage);
+person.say('爸爸要开始教育你了！');
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+//拖动-不使用自定义事件
+//错误总结：1.mousemove写成mouseover
+//			2.求差值（如果不求差值，那么鼠标移动的时候总是在div的最左上角）的的时候使用target.offsetLeft（左边框离浏览器最左边的距离）不要使用target.style.left
+//			  left有单位的			  
+/*window.onload=function(){
+	var DragDrop=(function(){
+		var dragging=null,
+			diffX=0,
+			diffY=0;
+			
+		function handlerEvent(event){
+			var target=event.target;
+			switch(event.type){
+				case 'mousedown':
+				//如果点击在了div上面的话 event代表document，event.target代表divContainer
+					if(target.className.indexOf('draggable')>-1){
+						dragging=target;
+						diffX=event.clientX-dragging.offsetLeft;
+						diffY=event.clientY-dragging.offsetTop;
+					}
+					break;
+				case 'mousemove':
+					if(dragging!=null){
+						dragging.style.left=(event.clientX-diffX)+'px';
+						dragging.style.top=(event.clientY-diffY)+'px';
+					}
+					break;
+				case 'mouseup':
+					dragging=null;	
+					break;
+			} 
+		}
+
+		return {
+			enable:function(){
+				// 是mousemove不是mouseover，这个搞错了 ==！！！
+				document.addEventListener('mousedown',handlerEvent,false);
+				document.addEventListener('mousemove',handlerEvent,false);
+				document.addEventListener('mouseup',handlerEvent,false);
+			},
+			disable:function(){
+				document.removeEventListener('mousedown',handlerEvent,false);
+				document.removeEventListener('mousemove',handlerEvent,false);
+				document.removeEventListener('mouseup',handlerEvent,false);
+			}
+		};
+	})();
+
+	DragDrop.enable();
+}*/
+
+
+//拖动--使用自定义事件
+//总结：我对自定义事件理解的还是不够深刻，fire函数中的参数其实就是addHandle中函数的参数，所以可以在addHandle中的函数中运行fire中传递的参数
+window.onload=function(){
+
+	var dragging=null,
+			diffX=0,
+			diffY=0,
+			dragDrop=new EventTarget();
+			
+	var DragDrop=(function(){
+		function handlerEvent(event){
+			var target=event.target;
+			switch(event.type){
+				case 'mousedown':
+				//如果点击在了div上面的话 event代表document，event.target代表divContainer
+					if(target.className.indexOf('draggable')>-1){
+						dragging=target;
+						diffX=event.clientX-dragging.offsetLeft;
+						diffY=event.clientY-dragging.offsetTop;
+						dragDrop.fire({type:'dragstart',target:dragging,x:event.clientX,y:event.clientY});
+					}
+					break;
+				case 'mousemove':
+					if(dragging!=null){
+						dragging.style.left=(event.clientX-diffX)+'px';
+						dragging.style.top=(event.clientY-diffY)+'px';
+						dragDrop.fire({type:'drag',target:dragging,x:event.clientX,y:event.clientY});
+					}
+					break;
+				case 'mouseup':
+					dragDrop.fire({type:'dragend',target:dragging,x:event.clientX,y:event.clientY});
+					dragging=null;	
+					break;
+			}
+		}
+
+		
+		dragDrop.enable=function(){
+			// 是mousemove不是mouseover，这个搞错了 ==！！！
+			document.addEventListener('mousedown',handlerEvent,false);
+			document.addEventListener('mousemove',handlerEvent,false);
+			document.addEventListener('mouseup',handlerEvent,false);
+		};
+		dragDrop.disable=function(){
+			document.removeEventListener('mousedown',handlerEvent,false);
+			document.removeEventListener('mousemove',handlerEvent,false);
+			document.removeEventListener('mouseup',handlerEvent,false);
+		}
+		return dragDrop;
+	})();
+
+	dragDrop.addHandler('dragstart',function(event){
+		console.log('start:'+event.target.id,event.x,event.y);
+	});
+	dragDrop.addHandler('drag',function(event){
+		console.log('drag:'+event.target.id,event.x,event.y);
+	});
+	dragDrop.addHandler('dragend',function(event){
+		console.log('end:'+event.target.id,event.x,event.y);
+	});
+
+	DragDrop.enable();
+}
+
+	
+</script>
+</html>

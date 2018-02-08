@@ -1,0 +1,10 @@
+1.关于typeof 和 instanceof
+typeof对基本类型的字面量会返回基本类型，比如num=2这些
+instanceof 需要前面的数先必须是object然后在进行比较，要不然一定都是false
+还可以通过Object.prototype.toString.call(参数)来进行判断
+
+2.URI和URL区别 http://web.jobbole.com/83452/
+URI包含了URL和URN
+URI :http://bitpoetry.io/posts/hello.html#intro(#intro资源文件)
+URL:http://bitpoetry.io/posts/hello.html
+URN:bitpoetry.io/posts/hello.html

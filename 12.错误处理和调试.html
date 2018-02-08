@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>错误处理和调试</title>
+</head>
+<body>
+	
+</body>
+<script>
+	function log(message){
+		// 调试技术
+		// 1.通过console
+		// 2.通过添加页面 这个很实用，因为有时候我在手机端是不知道一些测试结果的！！
+		// 3.通过throw new Error()
+		var console=document.getElementById('debuginfo');
+		if(console===null){
+			console=document.createElement('div');
+			console.id='debuginfo';
+			console.style.background='#dedede';
+			console.style.border='1px solid silver';
+			console.style.padding='5px';
+			console.style.width='400px';
+			console.style.position='absolute';
+			console.style.top='0px';
+			console.style.left='0px';
+			document.body.appendChild(console);
+		}
+		
+
+		console.innerHTML+='<p>'+message+'</p>';
+	}
+
+	(function fn(){
+		try{
+			var a=12;
+			// if(a instanceof Array){//可以通过判断来避免这错误
+				a.sort();
+			// }
+
+
+			
+		}catch(error){
+			console.log(error.message);
+			log(error.message);
+			//如果有throw，会先执行finally在执行throw
+			throw new Error('数字类型没有sort方法！！');
+			console.log('fn--catch--end');
+		}finally{
+			// 如果finally最后有return，则try-catch里面即使有return也不会执行
+			console.log('fn--finally--end');
+			log('fn--finally--end');
+		}
+
+	})();
+
+	window.onerror=function(){
+		// 这个只能用DOM1来执行，因为语法限制了
+	}
+</script>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>WebWork</title>
+	<!-- 总结一下
+	1.调用web Worker，是new Worker(记住有er)，参数必须带后缀（.js）
+	2.typeof 后面的需要引号的，比如'undefined'，不能是undefined
+	3.new之后的Worker调用onmessage方法的话，返回的参数是一个对象，调用里面的data才是传过来的数据
+	4.调用的demo_work.js不需要引用，否则会有问题的！！
+	 -->
+	<script>
+		var w;
+		function startWork(){
+			if(typeof(Worker)!='undefined'){
+				if(typeof w=='undefined'){
+					// Work还是Works？原来是Worker
+					w=new Worker('demo_work.js');
+				}
+				var n=document.getElementById('number');
+				w.onmessage=function(event){
+					n.innerHTML=event.data;
+				};
+			}
+		}
+
+		function stopWork(){
+			w.terminate();
+			w=undefined;
+		}
+	</script>
+</head>
+<body>
+	<button onclick='startWork()'>开始计数</button>
+	<button onclick='stopWork()'>停止计数</button>
+	<br />
+	计算结果：<span id='number'></span>
+</body>
+</html>

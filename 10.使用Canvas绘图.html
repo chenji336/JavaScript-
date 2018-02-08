@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Canvas绘图</title>
+</head>
+<body>
+	<canvas id='drawing' width='200' height='200' style='border:1px solid #ccc;margin:10px auto;display:block'>该浏览器不支持canvas画图</canvas>
+</body>
+<script>
+// 关于cnavas.width 和 canvas.style.width区别
+//      canvas.width是画布的大小
+//      canvas.style.width 是浏览器渲染的大小，所以在dpr是n的时候，canvas.width需要是canvas.style.width的n倍
+//      原因：当在dpr在iphone6的时候dpr=2，这个时候图片一般都需要是dpr=1图片大小的一倍
+// WebGL就先不看了，以后如果需要用到的话在过来查看
+	window.onload=function(){
+		var canvas=document.getElementById('drawing');
+		console.log('width:',canvas.width,'height:',canvas.height);
+		if(canvas.getContext){
+			var context=canvas.getContext('2d');
+
+			//绘制矩形
+			/*context.fillStyle='blue';
+			context.fillRect(30,30,50,50);
+			context.clearRect(40,40,10,10);
+
+			context.strokeStyle='red';
+			context.strokeRect(80,80,50,50);*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			/*//绘制路径
+			 context.beginPath();
+			 context.strokeStyle='red';
+			context.arc(100,100,99,Math.PI*0,Math.PI*2,false);
+			// 这里需要把点进行移动到内圆的一个点上，否则就会多出来从外圆到内圆的一条线
+			context.moveTo(194,100);
+			context.arc(100,100,94,0,Math.PI*2,false);
+
+			//开始绘制线条
+			context.moveTo(100,100);
+			context.lineTo(100,20);
+			context.moveTo(100,100);
+			context.lineTo(30,100);
+
+			// 设置线条宽度
+			 context.lineWidth=10;
+
+			context.lineCap='round';//控制线末端的形状（还有butt、square）
+			context.lineJoin='round';//控制连接线的形状
+			context.stroke();//上面的全是路径，路径是透明的，所以最后需要stroke()进行描边或则用fill()进行填充，默认颜色是黑色
+
+			//在路径中则是true
+			if(context.isPointInPath(100,100)){
+				console.log('(100,100) in path');
+			}*/
+		
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//绘制文本
+			/*context.font='bold 14px Arial';
+			context.textAlign='center';//水平方向
+			context.textBaseline='middle';//竖直方向
+			context.fillText('x确定baseline',100,15);
+			//如果是context.strokeText就是空的字体
+			//测量文本大小（width）
+			console.log('文本的宽度：',context.measureText('x确定baseline').width);*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//变化 rotate translate
+
+			//我们现在可以修改绘制线条的代码
+			//开始绘制线条
+			/*context.translate(100,100);//相当于现在100 100 就是原坐标0 0,不要搞反了
+			//开始rotate的顺序搞错了,顺序是先旋转在进行画图
+			//而且rotate是影响全局的
+			context.rotate(Math.PI/6);
+
+			context.moveTo(0,0);
+			context.lineTo(0,-100);
+
+			context.moveTo(0,0);
+			context.lineTo(-70,0);
+
+
+			context.lineCap='round';//控制线末端的形状（还有butt、square）
+			context.lineJoin='round';//控制连接线的形状
+			context.stroke();//上面的全是路径，路径是透明的，所以最后需要stroke()进行描边或则用fill()进行填充，默认颜色是黑色*/
+
+			//还有两个个比较重要的方法是save() restore()
+			//save()只是保存状态，不保存内容，看代码
+			/*context.beginPath();
+
+			context.fillStyle='red';
+			context.save();
+
+			context.fillStyle='yellow';
+			context.translate(50,50);
+			context.save();
+
+			context.fillStyle='blue';
+			context.fillRect(50,50,60,100);
+			
+			context.restore();//颜色改变
+			context.fillRect(50,50,60,100);
+
+			context.restore();//这里的图像显示就会从0 0 开始，并且颜色改变
+			context.fillRect(50,50,60,100);*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//绘制图像 drawImage()
+			/*var img=new Image();
+			img.src='http://t-1.tuzhan.com/ffd1b7858d44/up1/l/2011-01-15/19/ljy7.tuzhan.com_5cbce0ca80814793ac9ca1c995e24238.jpg';
+			
+			// document.body.appendChild(img);
+			//我还是一如既往的忘记了，应该加载完成之后在进行赋值
+			img.onload=function(){
+				 context.drawImage(img,0,0,100,100);//把img在坐标0 0 缩小到100 100
+				// context.drawImage(img,300,300,100,100,0,0,100,100);//把原图（300，300）高100 宽100 的图片放到坐标（0，0）,大小100*100的位置
+				// context.drawImage(img,300,30,100,100,0,0,100,100);//把原图（300，300）高100 宽100 的图片放到坐标（0，0）,大小100*100的位置
+			};*/
+
+			// 使用toDataURL
+			/*context.fillStyle='blue';
+			context.fillRect(30,30,50,50);
+			context.clearRect(40,40,10,10);
+
+			context.strokeStyle='red';
+			context.strokeRect(80,80,50,50);
+			//取得图片URL  如果图像的来源来自其他域，那么imgURI会抛出一个错误
+			var imgURI=canvas.toDataURL('image/png');
+			console.log('imgURI:',imgURI);
+			//获取图片
+			var img=new Image();
+			img.src=imgURI;
+			document.body.appendChild(img);*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//阴影,需要定义在画图前面
+			/*context.shadowColor='rgba(0,0,0,0.5)';
+			context.shadowOffsetX=15;
+			context.shadowOffsetY=5;
+			context.shadowBlur=13;//这个是模糊度，我开始忘记了这个,越大越模糊
+
+			context.fillStyle="#ff0000";
+			context.fillRect(10,10,50,50);
+
+			context.fillStyle='rgba(0,0,255,1)';
+			context.fillRect(60,60,50,50);*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//渐变
+			/*var gradient=context.createLinearGradient(0,0,100,100);
+			gradient.addColorStop(0,'white');
+			gradient.addColorStop(1,'black');
+
+			context.fillStyle=gradient;//！！gradient相当于是一个color，给予赋值
+			context.fillRect(0,0,100,100);
+*/
+			//辐射型 就是圆，向外扩散
+			/*var gradient=context.createRadialGradient(50,50,20,60,60,50);
+			gradient.addColorStop(0,'white');
+			gradient.addColorStop(1,'black');
+
+			context.fillStyle=gradient;//！！gradient相当于是一个color，给予赋值
+			context.fillRect(0,0,100,100);*/
+			
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//模式，图腾
+			/*var img=new Image();
+			img.src='http://t-1.tuzhan.com/ffd1b7858d44/up1/l/2011-01-15/19/ljy7.tuzhan.com_5cbce0ca80814793ac9ca1c995e24238.jpg';
+			img.onload=function(){
+				var pattern=context.createPattern(img,'repeat');//类似图片的background-repeat属性
+				context.fillStyle=pattern;
+				context.fillRect(0,0,400,400)
+			};*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//使用图像数据
+			/*var img=new Image(),
+				imgData,red,green,blue,alpha,
+				average,data,i,len;
+
+			img.src='1.jpg';
+			//图像'不干净'(跨域)的话就没有结果
+			// img.src='http://t-1.tuzhan.com/ffd1b7858d44/up1/l/2011-01-15/19/ljy7.tuzhan.com_5cbce0ca80814793ac9ca1c995e24238.jpg';
+			console.log('img.complete:',img.complete);
+			img.complete?reDraw():img.onload=function(){reDraw();};//context.drawing之后就保存在了context里面
+
+			function reDraw(){
+				document.body.appendChild(img);
+				context.drawImage(img,0,0,canvas.width,canvas.height);//!!混淆了canvas.width 和img.width
+				imgData=context.getImageData(0,0,canvas.width,canvas.height);//我这里漏了width height
+				data=imgData.data;
+				console.log('获取到的图像数据：',data);
+				//变黑白
+				for(i=0,len=data.length;i<len;i+=4){
+					red=data[i];
+					green=data[i+1];
+					blue=data[i+2];
+					alpha=data[i+3];
+					average=Math.floor((red+green+blue)/3);
+					data[i]=data[i+1]=data[i+2]=average;
+				}
+
+				imgData.data=data;
+				context.putImageData(imgData,0,0);
+			}*/
+		
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//合成
+			
+			context.fillStyle='#ff0000';
+			context.fillRect(0,0,150,150);
+
+			context.globalAlpha=0.5;//不透明度0.5，越大越不透明
+			//设置合成操作
+			 context.globalCompositeOperation='source-in';//后绘制的放在前绘制的上方
+
+			context.fillStyle='#00ff00';
+			context.fillRect(90,90,150,150);
+
+			context.globalAlpha=1;//最后把透明度设置成1，否则会影响后面的
+
+
+
+
+			
+		}
+
+	}
+</script>
+</html>

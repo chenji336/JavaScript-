@@ -1,0 +1,5 @@
+1.requestAnimateFrame()自动适配浏览器的最合适的时间间隔，解决的了动画不确定什么时候开始的问题
+2.Page visibility api，在你隐藏和离开网页的时候可以进行一些操作，比如你在开发游戏的时候就很有用
+3.Gelocation api 获取你的地理位置
+4.File API 文件二进制的操作 注意：提交的时候可以通过FormData直接包裹file，然后提交就行，就像提交表单一样，很方便的
+5.Web Workers 可以分线程去做别的操作

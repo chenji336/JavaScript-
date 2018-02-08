@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JSON</title>
+</head>
+<body>
+	
+</body>
+<script>
+	var sJson='[{"name":"chenji","sex":"man","age":26},{"name":"minxi","sex":"woman","age":23}]';
+	//把string转化成json,第二个参数是个过滤函数
+	var oJson=JSON.parse(sJson,function(key,value){
+		switch(key){
+			case "name":
+				return value+'New';
+			case "sex":
+				return value+'New2';
+			case "age":
+			//undefined相当于是删除了 
+				return undefined;
+			default:
+				return value;
+		}
+	});
+	console.log(oJson);
+	// stringify第二个参数可以是数组也可以是函数过滤(和上面parse一样)，第三个参数是缩进的(可以是数字也可以是string)
+	var sJsonCopy=JSON.stringify(oJson,['name'],'---');//把json变成string
+	console.log(sJsonCopy);
+
+	// toJSON的方法可以作为过滤的另外一种形式，如果过滤函数不能做到的话，可以使用这个
+	var toJsonStr={name:'chenji',sex:'man',age:26,toJSON:function(){return this.name;}}
+	console.log(JSON.stringify(toJsonStr));
+</script>
+</html>

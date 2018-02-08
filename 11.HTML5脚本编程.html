@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5脚本编程</title>
+	<style>
+		#div1 {
+			width:198px; 
+			height:66px;
+			padding:10px;
+			border:1px solid #aaaaaa;
+		}
+	</style>
+</head>
+<body>
+	<div id='div1' ondrop='drop(event)' ondragover='dragover(event)'></div>
+	<img id='dragImg' src="http://www.w3school.com.cn/i/eg_dragdrop_w3school.gif"  ondragstart='dragStart(event)'>
+</body>
+
+<script>
+	// window.onload=function(){
+		// 16.1 跨文档消息传递 （Cross-Document messaging）简称XDM(之前看的那个视频是说这个就是处理跨域的一种方法)
+		// 就是往自己内嵌的页面中（iframework），但是不同域，发送消息
+		// XDM的核心就是PostMessage()方法
+		// 第一个参数：需要传送的数据，虽然现在支持多种结构，但是为了安全起见最好都是传送string
+		// 第二个参数：发送安全的域
+		// 在使用PostMessage()方法的时候会触发message方法
+		// message方法的事件对象(event)包含三个方法：
+		// data:PostMessage的第一个参数的值
+		// origin:第二个参数值
+		// source:发送消息的文档的window对象的代理，代理不具有window对象的所有方法，但是具有PostMessage
+
+		// 16.2 拖放事件
+		// 被拖放的目标具有的事件
+		// dragstart drag dragend
+		// 放置到目的目标之后的事件
+		// dragenter dragover dragleave或则drop
+
+		//event参数在html中不能忘记填写
+		function dragStart(event){
+			event.dataTransfer.setData('text',event.target.id);
+		}
+
+		//这个需要阻止，默认事件好像是添加src进去
+		function dragover(event){
+			event.preventDefault();
+		}
+		// 默认事件好像是启动src
+		function drop(event){
+			event.preventDefault();
+			var dragElem=document.getElementById(event.dataTransfer.getData('Text'));
+			event.target.appendChild(dragElem);
+		}
+
+		// effectAllowed需要在ondragstart中使用
+		// dropEffect搭配effectAllowed使用，需要在ondropenter中使用
+
+
+		//	16.4 历史状态管理
+		//	在有些浏览器中，如果我们不刷新页面，只是改动hash，后退按钮是没有用的，或则倒退到了不是我们想要的页面
+		//	我们可以通过下面方式解决：
+		//	触发window.hashchange事件，在hasnchange中调用history.pushState,然后传入三个参数
+		//	之后如果你点击了后退按钮，可以触发window.popstate事件,在popstate的事件对象中，可以通过event.state来查看pushState中的第一个参数的状态对象
+		//	得到这个状态对象后，必须把页面重置为状态对象中的数据表示的状态（因为浏览器不会帮你记住这些）！！？？这段话不是很懂
+	// };
+</script>
+</html>

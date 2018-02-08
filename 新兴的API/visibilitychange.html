@@ -1,0 +1,19 @@
+<html>
+<body onload="load()">
+
+	<script>
+
+		function onVisibilityChanged(event) {
+			var hidden = event.target.webkitHidden;
+			if (hidden)
+				// 这个可以用在游戏和视频播放里面，当客户切换标签或则最小化浏览器的时候，暂停游戏等等
+				console.log('hidden',new Date());
+			else
+				console.log('visibility',new Date());
+		}
+		function load() {
+			document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+		}
+	</script>
+</body>
+</html>

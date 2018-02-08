@@ -1,0 +1,58 @@
+<!DOCTYPE>  
+<html>  
+  <head>  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">  
+  <title></title>  
+  <!-- http://blog.csdn.net/oscar999/article/details/37499743/ 
+	   http://www.cnblogs.com/jscode/archive/2013/04/27/3572239.html
+  -->
+  <div id='wx_pic' style='margin:0 auto;display:none;'>
+    <img src="../移动报销/img/dog.jpg" width='300'  height='300'  alt="">
+  </div>
+  <script>  
+  // function  handleFiles(files)  
+  // {  
+  //   if(files.length)  
+  //   {  
+  //      var file = files[0];  
+  //      var reader = new FileReader();  
+  //      reader.onload = function()  
+  //      {  
+  //          document.getElementById("filecontent").innerHTML = this.result;  
+  //      };  
+  //      reader.readAsBinaryString(file);  
+  //   }  
+  // }  
+  function handleFiles(files){  
+  	var preview=document.getElementById("filecontent");
+    for (var i = 0; i < files.length; i++) {  
+        var file = files[i];  
+        var imageType = /image.*/;  
+          
+        if (!file.type.match(imageType)) {  
+            continue;  
+        }  
+          
+        var img = document.createElement("img");  
+        img.classList.add("obj");  
+        img.file = file;  
+        preview.appendChild(img);  
+          
+        var reader = new FileReader();  
+        reader.onload = (function(aImg){  
+            return function(e){  
+                aImg.src = e.target.result;  
+            };  
+        })(img);  
+        reader.readAsDataURL(file);  
+    }  
+} 
+  </script>  
+    
+  </head>  
+  <body>  
+  
+  <input type="file" id="file" onchange="handleFiles(this.files)"/>  
+  <div id="filecontent">111</div>  
+  </body>  
+</html>  

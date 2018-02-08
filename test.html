@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+	<script src='7.事件.js'></script>
+	<link rel="stylesheet" href="http://code.jquery.com/jquery-latest.js">
+	<title>Document</title>
+	<style>
+		/*#div1{
+			background-color:red;
+			color:white;
+		}
+		#div2{
+			width:20px;
+			height:20px;
+		}*/
+	</style>
+</head>
+<body id='body'>
+	<script>	
+		/*var i=10;
+		do{
+			i+=2;
+		}while(i<10)
+
+		var b=10;
+		while(b<10){
+			b+=2;
+		}
+		console.log(i,b);*/
+
+		/*var num=0;
+		label1:
+		for(var i=0;i<10;i++){
+			for(var j=0;j<10;j++){
+				if(i==1&&j==1){
+					break label1;
+				}
+			num++;
+			}
+		}
+
+		console.log(i,j);*/
+
+		/*function bb(){
+			return;
+		}
+		bb();//undefined*/
+/*
+		function doAdd(num1,num2){
+			console.log(num1);
+			console.log(arguments[0],arguments[1]);
+		}
+
+		doAdd(1);*/
+
+	/*	function buildUrl(){
+			try{
+				throw 12222;
+			}catch(e){
+				var b=1;
+			}
+			var ob={x:3};
+			with(ob){
+				var a=1;
+				ob.y=8;
+			} 
+			console.log(a,ob.y);
+			console.log(b);
+		}
+		buildUrl();
+*/
+
+	/*var person1={
+		toString:function(){
+			return 'person1';
+		}
+	};
+	var person2={
+		toString:function(){
+			return 'person2';
+		}
+	};
+	var Person=[person1,person2];
+	alert(Person.toString());*/
+
+	/*var p1={name:'chenji',age:18};
+	var p2={name:'minxi',age:38};
+	var p3={name:'xinyu',age:28};
+
+	var ps=[p1,p2,p3];
+	ps.sort(function(p1,p2){return p1.age-p2.age});
+	ps.forEach(function(item){
+		console.log(item.name,item.age);
+	});*/
+
+	/* var str = 'google';
+	 var pattern = /gle/;
+	 console.log(pattern.test(str))*/
+
+	 // var str = 'aaa',
+	 // pattern1 = /a*/,
+	 // pattern2 = /a*?/;
+	 // pattern2.exec(str); // -> ''
+	 // pattern1.exec(str); // -> aaa 
+	 /*var str = 'google';
+	 var pattern = /goo(?=gle)/;
+	 console.log(pattern.exec(str)[0]); // -> goo*/
+
+	/* var str = 'hellow World\nWorld\naWorld',
+	 pattern1 = /World$/g;
+	 pattern2 = /^World$/gm;
+	 pattern1.exec(str);    // -> index:20 
+	 pattern2.exec(str); // -> index:13*/
+	</script>
+	<div id='div1'  name='nameDiv1' chenji='123' style='margin:10px 20px;background-color:yellow;width:100px;height:200px;border:4px solid gray;'>
+		chenji	
+		<div id='div2' name='nameDiv2'  style='background-color:red;height:100px;'></div>
+		<!-- <div id='div3' name='nameDiv3' style='margin:15px;padding:3px;background-color:white;'></div> -->
+		<!-- <p></p> -->
+		<a href="http://www.baidu.com" id='href-a'>click me</a>
+		<!-- <div id='div4'>comment</div> -->
+		<!-- <input type="text" id='text1'> -->
+	</div>
+
+	<!-- <div id='myDiv'>
+		Right Click or Ctrl+Click me to get a custom context menu.Click anywhere else to get the default context menu.
+		<input type="button" value='点击我' id='myButton'>
+	</div>
+
+	<ul id='myMenu' style='position:absolute;background-color:silver;visibility:hidden;'>
+		<li><a href="http://www.baidu.com">连接1</a></li>
+		<li><a href="http://www.cnblogs.com/MrBackKom/archive/2012/06/26/2564501.html">连接2</a></li>
+		<li><a href="">连接三</a></li>
+	</ul>
+
+	<ul id='myLinks'>
+		<li id='goWhere'>goWhere</li>
+		<li id='doWhere'>doWhere</li>
+		<li id='nobb'>nobb</li>
+	</ul>
+	<input type="text" id='myText'> -->
+
+	<!-- <form action="post" id='myForm'>
+		<ul>
+			<li><input type="radio" name='color' value='redValue'>red</li>
+			<li style='visibility:visible;display:none'><input type="radio" name='color' value='blue'>blue</li>
+			<li><input type="radio" name='color' value='black'>black</li>
+			<li><input type='text' name='text1'>textbox</li>
+			<li>aaa</li>
+		</ul>
+		<input type="text" name='text2' required>
+		<input type="button" id='btnFocus' value='btnFocus'>
+		<input type="button" id='btnBlur' value='btnBlur'>
+		<input type="submit" name='submitBtn' value='点击提交' >
+
+		<input type="text" maxlength="3" name='textArea'>
+		<input type="text" maxlength="3" name='textArea'>
+		<input type="text" maxlength="4" name='textArea'>
+		<input type='number' min='0' max='20' step='5' id='numberPut'>
+		<input type="text" pattern='\d+' id='patternPut'>
+
+		<select name="location" id="selLocation">
+			<option value="value1">text1</option>
+			<option value="value2">text2</option>
+			<option value="">text3</option>
+			<option>text4</option>
+			<option value="value5"></option>
+		</select>
+
+		<iframe src="blank.html" name='richEdit' style='width:100px;height:100px'></iframe>
+		<div id='richedit' style='width:100px;height:100px' contenteditable></div>
+		<button id='richBtn'>操作富文本</button>
+	</form> -->
+</body>
+</html>
