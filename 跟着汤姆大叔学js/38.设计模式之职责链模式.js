@@ -1,5 +1,6 @@
 // 38.设计模式之职责链模式.js
 // 这个职责链模式就类似于冒泡事件的那些算法（冒泡机制）
+// 把 if...elseif...else 给类化
 var NO_TOPIC=-1,
 	topic=0;
 function Handler(successor,top){

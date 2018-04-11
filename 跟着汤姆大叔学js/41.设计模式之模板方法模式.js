@@ -1,6 +1,6 @@
 // 41.设计模式之模板方法模式.js
 // 定义一个操作中的算法的框架，而将一些不走延迟到子类中进行实现。模板方法使得子类可以不改变一个算法的结构即可重新定义该算法的某些特定步骤
-//模板方法和策略模式的却别是：一个是继承，一个是用委托方式来实现
+//模板方法和策略模式的区别是：一个是继承，一个是用委托方式来实现
 
 //我可能会忘记的单词：烧开水（boilWater）、冲泡（brew）、倒在杯子里（pourOnCup），加小料（addCondiments）、CaffeineBeverage 、prepareRecipe 、customerWantsCondiments
 //一般继承的话记得使用 父类.apply(this),这样如果有参数就好操作了，使用confirm

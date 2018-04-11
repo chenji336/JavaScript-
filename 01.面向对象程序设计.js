@@ -236,4 +236,4 @@ inheritPrototype(SubType,SuperType);
 SubType.prototype.sayAge=function(){
 	console.log(this.age);
 };
- var sub=new SubType(1,2);
+var sub=new SubType(1,2);
